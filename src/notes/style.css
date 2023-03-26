@@ -1,0 +1,5 @@
+.row {
+  margin-bottom: 100px;
+  display: flex;
+  align-items: flex-start;
+}

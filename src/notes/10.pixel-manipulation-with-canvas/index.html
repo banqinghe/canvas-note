@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Play Pixel</title>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    #color-text {
+      display: inline-block;
+      padding: 20px 10px;
+      font-family: 'Menlo', 'Courier New', Courier, monospace;
+    }
+    .row {
+      position: relative;
+      flex-direction: column;
+    }
+    label {
+      display: inline-block;
+      min-width: 80px;
+    }
+    #zoom-window {
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+  <div class="row">
+    <canvas id="canvas" width="400"></canvas>
+    <p id="color-text"></p>
+  </div>
+  <div class="row">
+    <canvas id="put-image-data"></canvas>
+    <div>
+      <label for="origin">Origin</label>
+      <input type="radio" value="origin" name="color" id="origin">
+    </div>
+    <div>
+      <label for="grayscale">Grayscale</label>
+      <input type="radio" value="grayscale" name="color" id="grayscale">
+    </div>
+    <div>
+      <label for="invert">Invert</label>
+      <input type="radio" value="invert" name="color" id="invert">
+    </div>
+  </div>
+  <div class="row">
+    <canvas id="source-canvas"></canvas>
+    <canvas id="zoom-window" width="200" height="200" style="display:none"></canvas>
+  </div>
+  <script src="./index.js"></script>
+  <script type="module" src="./put-image-data.js"></script>
+  <script type="module" src="./zoom-canvas.js"></script>
+</body>
+</html>
