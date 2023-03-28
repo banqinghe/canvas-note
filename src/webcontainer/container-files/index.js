@@ -1,17 +1,15 @@
-import express from 'express';
+import http from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import finalhandler from 'finalhandler';
+import serveStatic from 'serve-static';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const app = express();
-const port = 3111;
+const serve = serveStatic(path.resolve(__dirname, 'notes'));
 
-// access -> /static/00.canvas-api/index.html
-
-app.use('/static', express.static(path.resolve(__dirname, 'notes')));
-
-app.listen(port, () => {
-  console.log(`App is live at http://localhost:${port}`);
-});
+http
+  .createServer((req, res) => {
+    serve(req, res, finalhandler(req, res));
+  })
+  .listen(3000);

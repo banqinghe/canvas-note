@@ -2,10 +2,10 @@
   "name": "notes-app",
   "type": "module",
   "dependencies": {
-    "express": "latest",
-    "nodemon": "latest"
+    "finalhandler": "latest",
+    "serve-static": "latest"
   },
   "scripts": {
-    "start": "nodemon --watch './' index.js"
+    "start": "node './' index.js"
   }
 }

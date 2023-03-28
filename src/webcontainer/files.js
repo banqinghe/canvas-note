@@ -15,8 +15,6 @@ const notesModules = import.meta.glob(
   }
 );
 
-// console.log(notesModules);
-
 /** @satisfies {import('@webcontainer/api').FileSystemTree} */
 export const files = {
   'index.js': {
@@ -185,42 +183,14 @@ export const files = {
       },
       '08.basic-animations': {
         directory: {
-          clock: {
-            directory: {
-              'index.html': {
-                file: {
-                  contents:
-                    notesModules[
-                      '../notes/08.basic-animations/clock/index.html'
-                    ],
-                },
-              },
-              'index.js': {
-                file: {
-                  contents:
-                    notesModules['../notes/08.basic-animations/clock/index.js'],
-                },
-              },
+          'index.html': {
+            file: {
+              contents: notesModules['../notes/08.basic-animations/index.html'],
             },
           },
-          'solar-system': {
-            directory: {
-              'index.html': {
-                file: {
-                  contents:
-                    notesModules[
-                      '../notes/08.basic-animations/solar-system/index.html'
-                    ],
-                },
-              },
-              'index.js': {
-                file: {
-                  contents:
-                    notesModules[
-                      '../notes/08.basic-animations/solar-system/index.js'
-                    ],
-                },
-              },
+          'index.js': {
+            file: {
+              contents: notesModules['../notes/08.basic-animations/index.js'],
             },
           },
           'note.md': {
@@ -343,14 +313,14 @@ export const files = {
           },
         },
       },
-      'index.js': {
-        file: {
-          contents: notesModules['../notes/index.js'],
-        },
-      },
       'style.css': {
         file: {
           contents: notesModules['../notes/style.css'],
+        },
+      },
+      'messager.js': {
+        file: {
+          contents: notesModules['../notes/messager.js'],
         },
       },
       util: {

@@ -18,7 +18,6 @@ const iframeRef = ref(null);
 
 const loading = ref(true);
 const code = ref('');
-console.log('hello');
 const editorExtension = ref([javascript()]);
 const chapterContent = ref(null);
 
@@ -48,7 +47,7 @@ async function startDevServer() {
 
   webcontainerInstance.on('server-ready', (_, url) => {
     iframeUrl = url;
-    iframeRef.value.src = `${iframeUrl}/static/${props.chapter}/index.html`;
+    iframeRef.value.src = `${iframeUrl}/${props.chapter}/index.html`;
     loading.value = false;
   });
 }
@@ -68,7 +67,7 @@ const handleInput = debounce(
   async code => {
     if (inputCause === 'input') {
       await writeIndexJS(code);
-      iframeRef.value.contentWindow.location.reload();
+      iframeRef.value.contentWindow.postMessage('reload', '*');
     } else {
       inputCause = 'input';
     }
@@ -99,7 +98,7 @@ watch(
     code.value = chapterContent.value.javascript.contents;
     inputCause = 'chapter';
     if (iframeRef.value) {
-      iframeRef.value.src = `${iframeUrl}/static/${props.chapter}/index.html`;
+      iframeRef.value.src = `${iframeUrl}/${props.chapter}/index.html`;
     }
   },
   { immediate: true }

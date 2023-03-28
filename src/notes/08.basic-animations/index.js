@@ -26,7 +26,7 @@ function getImage(url) {
 }
 
 function getAllImages(urls) {
-  return Promise.all(urls.map((url) => getImage(url)));
+  return Promise.all(urls.map(url => getImage(url)));
 }
 
 function init() {
@@ -34,7 +34,7 @@ function init() {
     'https://raw.githubusercontent.com/banqinghe/blog/main/images/canvas-note/canvas_sun.png',
     'https://raw.githubusercontent.com/banqinghe/blog/main/images/canvas-note/canvas_moon.png',
     'https://raw.githubusercontent.com/banqinghe/blog/main/images/canvas-note/canvas_earth.png',
-  ]).then((imgs) => {
+  ]).then(imgs => {
     sunImg = imgs[0];
     moonImg = imgs[1];
     earthImg = imgs[2];

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Play Pixel</title>
+  <script src="../messager.js"></script>
   <link rel="stylesheet" href="../style.css">
   <style>
     #color-text {
@@ -12,19 +14,23 @@
       padding: 20px 10px;
       font-family: 'Menlo', 'Courier New', Courier, monospace;
     }
+
     .row {
       position: relative;
       flex-direction: column;
     }
+
     label {
       display: inline-block;
       min-width: 80px;
     }
+
     #zoom-window {
       position: absolute;
     }
   </style>
 </head>
+
 <body>
   <div class="row">
     <canvas id="canvas" width="400"></canvas>
@@ -53,4 +59,5 @@
   <script type="module" src="./put-image-data.js"></script>
   <script type="module" src="./zoom-canvas.js"></script>
 </body>
+
 </html>
