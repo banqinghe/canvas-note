@@ -15,7 +15,6 @@ const handleReady = payload => {
 <template>
   <Codemirror
     :model-value="props.code"
-    placeholder="Code goes here..."
     class="h-full"
     :autofocus="true"
     :indent-with-tab="true"

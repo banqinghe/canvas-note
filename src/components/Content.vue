@@ -1,22 +1,16 @@
 <script setup>
 import { ref, watch } from 'vue';
-import { WebContainer } from '@webcontainer/api';
 import { debounce } from 'throttle-debounce';
 import { javascript } from '@codemirror/lang-javascript';
 import Editor from './Editor.vue';
-import { files } from '../webcontainer/files';
+import { initWebContainer, writeFile, loading } from '../webcontainer';
 import { getNotePath } from '../utils';
 
 const props = defineProps({
   chapter: String,
 });
 
-/** @type {import('@webcontainer/api').WebContainer}  */
-let webcontainerInstance;
-
 const iframeRef = ref(null);
-
-const loading = ref(true);
 const code = ref('');
 const editorExtension = ref([javascript()]);
 const chapterContent = ref(null);
@@ -26,47 +20,11 @@ let iframeUrl;
 // record the cause of input event, prevent extra reload
 let inputCause = 'input';
 
-async function installDependencies() {
-  console.log('npm install ...');
-  const installProcess = await webcontainerInstance.spawn('npm', ['install']);
-
-  // print unreadable characters (why?), disable
-  // installProcess.output.pipeTo(
-  //   new WritableStream({
-  //     write(data) {
-  //       console.log(data);
-  //     },
-  //   })
-  // );
-
-  return installProcess.exit;
-}
-
-async function startDevServer() {
-  await webcontainerInstance.spawn('npm', ['run', 'start']);
-
-  webcontainerInstance.on('server-ready', (_, url) => {
-    iframeUrl = url;
-    iframeRef.value.src = `${iframeUrl}/${props.chapter}/index.html`;
-    loading.value = false;
-  });
-}
-
-async function writeIndexJS(content) {
-  if (!webcontainerInstance) {
-    return;
-  }
-  await webcontainerInstance.fs.writeFile(
-    chapterContent.value.javascript.path,
-    content
-  );
-}
-
 const handleInput = debounce(
   250,
   async code => {
     if (inputCause === 'input') {
-      await writeIndexJS(code);
+      await writeFile(chapterContent.value.javascript.path, code);
       iframeRef.value.contentWindow.postMessage('reload', '*');
     } else {
       inputCause = 'input';
@@ -75,34 +33,34 @@ const handleInput = debounce(
   { atBegin: false }
 );
 
-window.addEventListener('load', async () => {
-  console.log('begin boot');
-  webcontainerInstance = await WebContainer.boot();
-  await webcontainerInstance.mount(files);
-  console.log('end boot');
-
-  const exitCode = await installDependencies();
-  if (exitCode !== 0) {
-    throw new Error('Installation failed');
-  } else {
-    console.log('install done');
+function loadContentByChapter(chapter) {
+  chapterContent.value = getNotePath(chapter);
+  code.value = chapterContent.value.javascript.contents;
+  if (iframeRef.value) {
+    iframeRef.value.src = `${iframeUrl}/${chapter}/index.html`;
   }
+}
 
-  startDevServer();
-});
+async function initContent() {
+  try {
+    const url = await initWebContainer();
+    iframeUrl = url;
+    loadContentByChapter(props.chapter);
+    loading.value = '';
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 watch(
   () => props.chapter,
   () => {
-    chapterContent.value = getNotePath(props.chapter);
-    code.value = chapterContent.value.javascript.contents;
     inputCause = 'chapter';
-    if (iframeRef.value) {
-      iframeRef.value.src = `${iframeUrl}/${props.chapter}/index.html`;
-    }
-  },
-  { immediate: true }
+    loadContentByChapter(props.chapter);
+  }
 );
+
+initContent();
 </script>
 
 <template>
@@ -123,9 +81,11 @@ watch(
 
     <div
       v-if="loading"
-      class="flex justify-center items-center bg-gray-200 opacity-50 absolute inset-0"
+      class="flex justify-center items-center bg-gray-100 opacity-80 fixed inset-0"
     >
-      <p class="text-2xl font-bold text-black animate-pulse">Loading...</p>
+      <p class="text-2xl font-bold font-mono text-black animate-pulse">
+        {{ loading }} ...
+      </p>
     </div>
   </div>
 </template>
